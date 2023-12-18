@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>遍历分形</title>
+    <link>https://example.org/</link>
+    <description>Recent content on 遍历分形</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 18 Dec 2023 17:03:00 +0800</lastBuildDate>
+    <atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>语言配置</title>
+      <link>https://example.org/tutorial/language/</link>
+      <pubDate>Mon, 18 Dec 2023 17:03:00 +0800</pubDate>
+      <guid>https://example.org/tutorial/language/</guid>
+      <description>要将上述语言配置为中文，您只需要将相应的变量值更改为中文。下面是将这些变量配置为中文的代码：&#xA;baseURL = &amp;#39;https://example.org/&amp;#39; languageCode = &amp;#39;zh-cn&amp;#39; title = &amp;#39;我的新Hugo网站&amp;#39; theme = &amp;#39;ananke&amp;#39; 现在，baseURL 仍然保持不变，languageCode 设置为 &#39;zh-cn&#39;，title 设置为 &#39;我的新Hugo网站&#39;，theme 保持不变为 &#39;ananke&#39;。&#xA;请注意，zh-cn 是中文简体的语言代码。如果您想使用其他中文方言或语言，请将 languageCode 更改为相应的值。</description>
+    </item>
+    <item>
+      <title>使用场景</title>
+      <link>https://example.org/tutorial/usecase/</link>
+      <pubDate>Mon, 18 Dec 2023 16:47:15 +0800</pubDate>
+      <guid>https://example.org/tutorial/usecase/</guid>
+      <description>下面是以表格形式整理的Hugo中的30个重要概念、使用场景和具体案例： 概念 使用场景 具体案例 安装 Hugo 在本地计算机上安装Hugo，以便开始建站。 访</description>
+    </item>
+    <item>
+      <title>关键概念</title>
+      <link>https://example.org/tutorial/concepts/</link>
+      <pubDate>Mon, 18 Dec 2023 16:45:38 +0800</pubDate>
+      <guid>https://example.org/tutorial/concepts/</guid>
+      <description>在 Hugo 中，有许多重要的概念和用法，以下是30个关键点以及它们的使用场景和具体案例：&#xA;安装 Hugo：下载并安装 Hugo，为创建站点做准备。 创建新站点：使用 hugo new site &amp;lt;SITENAME&amp;gt; 创建新的项目目录。 配置文件：config.toml 文件用于定义全局设置和元数据。 内容管理：内容以 Markdown 文件形式存在于 content 目录下。 内容类型：如博客文章、页面，通过在 content 下建立不同子目录管理。 Front Matter：每个内容文件顶部的元数据，定义如日期、标题等信息。 主题：通过主题来定义站点的外观和布局。 Shortcodes：在 Markdown 中插入预定义的 HTML 代码块。 Taxonomies：分类和标签，用于组织内容。 数据文件：存放在 data 目录的 TOML、YAML 或 JSON 文件，用于非内容数据。 静态文件：存放在 static 目录，如图片、CSS、JS 文件。 模板：Hugo 使用 Go 模板语言来渲染页面。 部分模板：复用的 HTML 块，如头部和脚部。 列表页面：显示内容列表，如博客文章列表。 单页：显示单个内容项，如单篇文章。 Archetypes：内容文件的模板，用于快速创建具有相同结构的新内容。 Menus：站点导航菜单的配置。 自定义输出格式：除了 HTML 外，还可以输出 JSON 或其他格式。 多语言支持：可以创建多语言站点。 Hugo Pipes：资源管道，用于处理 CSS 和 JS 文件。 模块：引入其他 Hugo 项目作为模块依赖。 页面捆绑：将相关资源与页面捆绑在一起。 图片处理：调整图片大小、添加滤镜等。 自定义变量：在配置文件或 Front Matter 中定义变量供模板使用。 网站构建：使用 hugo 命令构建静态文件。 本地服务器：使用 hugo server 在本地预览网站。 部署网站：将构建的静态文件部署到服务器或托管平台。 性能优化：使用缓存、压缩等技术优化网站性能。 SEO优化：通过合理的 Front Matter 和模板设计提升搜索引擎优化。 错误调试：排查错误，如缺失文件、配置错误等。 使用场景和具体案例：</description>
+    </item>
+    <item>
+      <title>A true story</title>
+      <link>https://example.org/posts/first/</link>
+      <pubDate>Mon, 18 Dec 2023 15:30:21 +0800</pubDate>
+      <guid>https://example.org/posts/first/</guid>
+      <description>中文版本 阳光明媚的春天,小女孩阿娜快乐地沿着森林小路蹦跳,哼着欢快的小调。她提着一个装满鲜艳郁金香、欢快的雏菊和香气四溢的丁香的花篮,正要去奶奶的小木屋送上这份春天的礼物。&#xA;当阿娜走近那座古朴的小木屋时,她听到一阵奇怪的隆隆声。她停下脚步,仔细倾听,直到森林再次安静下来。“多奇怪啊。”阿娜想着,放慢脚步小心翼翼地继续走,保持警惕。森林里平时是那么安详宁静的。&#xA;当阿娜来到木屋前,她惊呆了。大门洞开着,里面一片狼藉——椅子翻倒,窗帘被扯下,东西扔得到处都是。“奶奶?” 阿娜担心地叫了一声。她小心翼翼地走进去,把花篮放在门廊上。奶奶去哪儿了?这是谁干的?&#xA;就在这时,阿娜从里屋听到一声呜咽。她冲进去,发现奶奶被绑在椅子上,一个强盗正提着一袋奶奶的东西。“放开我奶奶!”阿娜大喊。强盗吓了一跳,掉下袋子,从敞开的窗户跳进了森林。&#xA;阿娜赶紧解开奶奶,奶奶虽然惊魂未定但没有受伤。“谢谢你,我勇敢的孩子,你救了我!”奶奶哭着说。阿娜微笑着,为自己的勇气和奶奶的平安感到无比欣慰。她把精心准备的春花篮送给了奶奶。不久,小木屋又恢复了原有的整洁,处处洋溢着阿娜送来的美丽春花的色彩和快乐。&#xA;##　English Version Here is an attempt at an interesting short story for you:&#xA;It was a sunny spring day when Ana skipped down the forest path, humming a happy tune. She clutched her basket filled with freshly picked flowers - colorful tulips, cheerful daisies, and fragrant lilacs. Ana was on her way to her grandmother&amp;rsquo;s cottage to bring her the gift of spring blooms.</description>
+    </item>
+    <item>
+      <title>Windows 快捷键使用指南</title>
+      <link>https://example.org/posts/windows-%E5%BF%AB%E6%8D%B7%E9%94%AE%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Mon, 18 Dec 2023 15:30:21 +0800</pubDate>
+      <guid>https://example.org/posts/windows-%E5%BF%AB%E6%8D%B7%E9%94%AE%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</guid>
+      <description>如果你像我一样是个工具狂和效率癖，热衷于探索和学习各种有趣的工具，那么相信我，我整理的这些小技巧和快捷键绝对能帮到你，我分成了浏览器（Chrome 内核以及非 Chrome 内核），Windows 10，以及键盘三部分 我想这应该是到目前为止快捷键收录最广泛的文章，建议大家收藏。&#xA;【浏览器篇】Chrome &amp;amp; 新 Edge Shift + Esc 打开浏览器任务管理器 众所周知，Chrome 是内存杀手，当你的电脑不堪重负时，你又仅仅只是打开了几十个标签页时，你可以按 Shift + Esc 打开任务管理器看看是哪个坏家伙干的好事😠。&#xA;Ctrl 同样用于选择多个窗口 大家应该知道，Chrome 可以通过拖动标签页将它变成独立窗口，可是如果有几个窗口要同时拖动呢？先 按Ctrl 多选目标窗口，然后拖动即可😁。&#xA;Shift + 滚轮可以用于水平滚动网页内容 如果遇到像表格或者后台页面等宽度较大的网页，很多人只能拉动水平滚动条，但是你还有更方便的选择： 按 Shift + 滚动鼠标滚轮，即可自如地左右滑动。 顺便，这个操作同样适用于多数软件(如 Axure )和基于 chromium(通过 Electron) 的应用(如 Figma)&#xA;【浏览器篇】所有浏览器( IE &amp;amp; Firefox ) F6 或 Ctrl + L 可以直接将光标聚焦到地址栏 所以如果想要搜点什么或者访问特定地址，请记住这个最快速的方式 类似的，在 Chrome 中，Ctrl + E 可以直接将光标聚焦到地址栏使用默认搜索引擎搜索&#xA;使用鼠标中键(滚轮键)点击标题，可以关掉所选标签页 按 Ctrl + W 也同样可以关掉当前标签 另外，用鼠标中键点击书签文件夹，可以打开文件夹内的所有书签网页&#xA;Ctrl + P 可以调出打印窗口 阅读在线文档或者幻灯片的时候，如果网页没提供打印按钮，你也可以自己动手</description>
+    </item>
+    <item>
+      <title>网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构</title>
+      <link>https://example.org/posts/%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E5%85%A5%E9%97%A8/</link>
+      <pubDate>Mon, 18 Dec 2023 15:30:21 +0800</pubDate>
+      <guid>https://example.org/posts/%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E5%85%A5%E9%97%A8/</guid>
+      <description>网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构 Link: https://engineering.videoblocks.com/web-architecture-101-a3224e126947 Quality: 精翻 Status: Completed Type: 图文&#xA;作为架构师，我希望开发者知道的基础架构概念 以上的架构图是对 Storyblocks 业务架构的一个很好的概括。对于那些相对缺乏经验的 web 开发者，或许你会认为这个架构有些复杂。没关系，在讲解每个组件的具体业务细节之前，我们先举个例子，帮你更容易理解 Storyblocks 的业务架构&#xA;先从一个场景开始：用户用谷歌搜索 「美丽的浓雾和林间的阳光」 。首个结果正好出自 Storyblocks — 一个知名的图片和矢量图资源网站，用户点击该条结果，浏览器重定向到该图片的所在的详情页面。&#xA;这个场景背后，用户浏览器向 DNS 服务器发送请求，查询 Storyblocks 的域名信息，然后发送访问请求。访问请求首先经过负载均衡器，负载均衡器会从十多台运行网站服务的网络服务器选择任意一台，将请求发送到这台服务器进行处理，网络服务器先从缓存服务器查询图片的详情信息，然后从数据库获取图片的其他相关信息。&#xA;我们注意到这张图片的色彩配置信息还没被计算出来，于是服务器将一个新的色彩配置任务推送到任务队列，我们的任务队列服务器将异步地处理图片的色彩配置信息计算，一旦完成，便将配置信息更新到数据库中。&#xA;下一步，服务器将图片标题作为关键词，向全文检索服务发送查询请求以寻找相似图片。此时用户登入他的 Storyblocks 账户，相应地，服务器从账户服务中获取用户账户信息。&#xA;接下来，我们将这个页面浏览事件加载到 data firehose(AWS 推出的流数据装载服务) 以记录到云存储系统，并最终存储到数据仓库，便于分析师分析使用并帮助解答业务问题。&#xA;服务端将视图呈现为为 HTML 页面并经由负载均衡器，返回用户的浏览器客户端。这个页面同时包含存储在云存储系统的 Javascript 和 CSS 代码文件，云服务器直接连接到 CDN 集群，内容也经由 CDN 分发，用户浏览器访问 CDN 集群并获取内容。&#xA;最终，浏览器渲染页面使用户可以浏览阅读。&#xA;接下来，我将带你遍历每个组件，并做简要说明和介绍，帮助你形成一个相对准确的概念模型，以便于理解网络架构和组件间的交互。我仍将遵循已经分享的文章中给出的一些实践建议，这些建议基于我在 Stroyblocks 的业务经验，具有一定参考价值。&#xA;1. DNS 服务 DNS 代表 「域名系统」，这是互联网成为可能的核心技术。DNS 从最基础的层级，提供从域名 (例如 google.com) 到 IP 地址 (85.129.83.120) 的键值对查询服务，事实上，电脑基于网站的 IP 地址路由到合适的服务器。用电话号码比喻，域名和 IP 地址的关系，类似于联系人姓名和号码的关系。正如你需要通过电话簿来查询特定联系人的电话号码，你同样需要 通过 DNS 来查询指定域名的 IP 地址，所以你完全可以把 DNS 理解为互联网的电话号码簿。</description>
+    </item>
+    <item>
+      <title>快速开始</title>
+      <link>https://example.org/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://example.org/about/</guid>
+      <description>根据我的搜索结果，Hugo 是一个流行的静态网站生成器，它使用 Go 语言编写。Hugo 的使用方法相对简单，您可以通过以下步骤来开始使用 Hugo：&#xA;安装 Hugo：首先，您需要安装 Hugo。您可以访问 Hugo 官方网站 获取安装指南。确保您安装了扩展版的 Hugo（extended edition）。&#xA;创建站点：一旦安装完成，您可以使用命令行工具创建一个新的 Hugo 站点。在命令行中，导航到您希望创建站点的目录，并运行以下命令：&#xA;hugo new site mywebsite 添加内容：接下来，您可以向站点添加内容。您可以使用以下命令创建新的内容页面：&#xA;hugo new posts/my-first-post.md 配置站点：Hugo 使用 TOML、YAML 或 JSON 格式的配置文件。您可以编辑 config.toml 文件来配置站点的基本设置，包括标题、语言、主题等。&#xA;构建和预览：在站点目录中运行以下命令来构建您的站点：&#xA;hugo 然后，您可以使用以下命令来在本地预览站点：&#xA;hugo server -D 发布站点：当您满意站点的内容和外观后，您可以将生成的静态文件部署到您选择的托管平台上。&#xA;以上是使用 Hugo 的基本步骤。如果您需要更详细的指导，可以访问Hugo官方网站的配置指南获取更多信息。&#xA;希望这些信息能够帮助您开始使用 Hugo。如果您有其他问题，欢迎随时向我提问。</description>
+    </item>
+  </channel>
+</rss>

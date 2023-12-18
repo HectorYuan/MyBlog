@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构 | 遍历分形</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构 Link: https://engineering.videoblocks.com/web-architecture-101-a3224e126947 Quality: 精翻 Status: Completed Type: 图文
+作为架构师，我希望开发者知道的基础架构概念 以上的架构图是对 Storyblocks 业务架构的一个很好的概括。对于那些相对缺乏经验的 web 开发者，或许你会认为这个架构有些复杂。没关系，在讲解每个组件的具体业务细节之前，我们先举个例子，帮你更容易理解 Storyblocks 的业务架构
+先从一个场景开始：用户用谷歌搜索 「美丽的浓雾和林间的阳光」 。首个结果正好出自 Storyblocks — 一个知名的图片和矢量图资源网站，用户点击该条结果，浏览器重定向到该图片的所在的详情页面。
+这个场景背后，用户浏览器向 DNS 服务器发送请求，查询 Storyblocks 的域名信息，然后发送访问请求。访问请求首先经过负载均衡器，负载均衡器会从十多台运行网站服务的网络服务器选择任意一台，将请求发送到这台服务器进行处理，网络服务器先从缓存服务器查询图片的详情信息，然后从数据库获取图片的其他相关信息。
+我们注意到这张图片的色彩配置信息还没被计算出来，于是服务器将一个新的色彩配置任务推送到任务队列，我们的任务队列服务器将异步地处理图片的色彩配置信息计算，一旦完成，便将配置信息更新到数据库中。
+下一步，服务器将图片标题作为关键词，向全文检索服务发送查询请求以寻找相似图片。此时用户登入他的 Storyblocks 账户，相应地，服务器从账户服务中获取用户账户信息。
+接下来，我们将这个页面浏览事件加载到 data firehose(AWS 推出的流数据装载服务) 以记录到云存储系统，并最终存储到数据仓库，便于分析师分析使用并帮助解答业务问题。
+服务端将视图呈现为为 HTML 页面并经由负载均衡器，返回用户的浏览器客户端。这个页面同时包含存储在云存储系统的 Javascript 和 CSS 代码文件，云服务器直接连接到 CDN 集群，内容也经由 CDN 分发，用户浏览器访问 CDN 集群并获取内容。
+最终，浏览器渲染页面使用户可以浏览阅读。
+接下来，我将带你遍历每个组件，并做简要说明和介绍，帮助你形成一个相对准确的概念模型，以便于理解网络架构和组件间的交互。我仍将遵循已经分享的文章中给出的一些实践建议，这些建议基于我在 Stroyblocks 的业务经验，具有一定参考价值。
+1. DNS 服务 DNS 代表 「域名系统」，这是互联网成为可能的核心技术。DNS 从最基础的层级，提供从域名 (例如 google.com) 到 IP 地址 (85.129.83.120) 的键值对查询服务，事实上，电脑基于网站的 IP 地址路由到合适的服务器。用电话号码比喻，域名和 IP 地址的关系，类似于联系人姓名和号码的关系。正如你需要通过电话簿来查询特定联系人的电话号码，你同样需要 通过 DNS 来查询指定域名的 IP 地址，所以你完全可以把 DNS 理解为互联网的电话号码簿。">
+    <meta name="generator" content="Hugo 0.121.1">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E5%85%A5%E9%97%A8/">
+    
+
+    <meta property="og:title" content="网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构" />
+<meta property="og:description" content="网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构 Link: https://engineering.videoblocks.com/web-architecture-101-a3224e126947 Quality: 精翻 Status: Completed Type: 图文
+作为架构师，我希望开发者知道的基础架构概念 以上的架构图是对 Storyblocks 业务架构的一个很好的概括。对于那些相对缺乏经验的 web 开发者，或许你会认为这个架构有些复杂。没关系，在讲解每个组件的具体业务细节之前，我们先举个例子，帮你更容易理解 Storyblocks 的业务架构
+先从一个场景开始：用户用谷歌搜索 「美丽的浓雾和林间的阳光」 。首个结果正好出自 Storyblocks — 一个知名的图片和矢量图资源网站，用户点击该条结果，浏览器重定向到该图片的所在的详情页面。
+这个场景背后，用户浏览器向 DNS 服务器发送请求，查询 Storyblocks 的域名信息，然后发送访问请求。访问请求首先经过负载均衡器，负载均衡器会从十多台运行网站服务的网络服务器选择任意一台，将请求发送到这台服务器进行处理，网络服务器先从缓存服务器查询图片的详情信息，然后从数据库获取图片的其他相关信息。
+我们注意到这张图片的色彩配置信息还没被计算出来，于是服务器将一个新的色彩配置任务推送到任务队列，我们的任务队列服务器将异步地处理图片的色彩配置信息计算，一旦完成，便将配置信息更新到数据库中。
+下一步，服务器将图片标题作为关键词，向全文检索服务发送查询请求以寻找相似图片。此时用户登入他的 Storyblocks 账户，相应地，服务器从账户服务中获取用户账户信息。
+接下来，我们将这个页面浏览事件加载到 data firehose(AWS 推出的流数据装载服务) 以记录到云存储系统，并最终存储到数据仓库，便于分析师分析使用并帮助解答业务问题。
+服务端将视图呈现为为 HTML 页面并经由负载均衡器，返回用户的浏览器客户端。这个页面同时包含存储在云存储系统的 Javascript 和 CSS 代码文件，云服务器直接连接到 CDN 集群，内容也经由 CDN 分发，用户浏览器访问 CDN 集群并获取内容。
+最终，浏览器渲染页面使用户可以浏览阅读。
+接下来，我将带你遍历每个组件，并做简要说明和介绍，帮助你形成一个相对准确的概念模型，以便于理解网络架构和组件间的交互。我仍将遵循已经分享的文章中给出的一些实践建议，这些建议基于我在 Stroyblocks 的业务经验，具有一定参考价值。
+1. DNS 服务 DNS 代表 「域名系统」，这是互联网成为可能的核心技术。DNS 从最基础的层级，提供从域名 (例如 google.com) 到 IP 地址 (85.129.83.120) 的键值对查询服务，事实上，电脑基于网站的 IP 地址路由到合适的服务器。用电话号码比喻，域名和 IP 地址的关系，类似于联系人姓名和号码的关系。正如你需要通过电话簿来查询特定联系人的电话号码，你同样需要 通过 DNS 来查询指定域名的 IP 地址，所以你完全可以把 DNS 理解为互联网的电话号码簿。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.org/posts/%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E5%85%A5%E9%97%A8/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-12-18T15:30:21+08:00" />
+<meta property="article:modified_time" content="2023-12-18T15:30:21+08:00" />
+
+<meta itemprop="name" content="网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构">
+<meta itemprop="description" content="网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构 Link: https://engineering.videoblocks.com/web-architecture-101-a3224e126947 Quality: 精翻 Status: Completed Type: 图文
+作为架构师，我希望开发者知道的基础架构概念 以上的架构图是对 Storyblocks 业务架构的一个很好的概括。对于那些相对缺乏经验的 web 开发者，或许你会认为这个架构有些复杂。没关系，在讲解每个组件的具体业务细节之前，我们先举个例子，帮你更容易理解 Storyblocks 的业务架构
+先从一个场景开始：用户用谷歌搜索 「美丽的浓雾和林间的阳光」 。首个结果正好出自 Storyblocks — 一个知名的图片和矢量图资源网站，用户点击该条结果，浏览器重定向到该图片的所在的详情页面。
+这个场景背后，用户浏览器向 DNS 服务器发送请求，查询 Storyblocks 的域名信息，然后发送访问请求。访问请求首先经过负载均衡器，负载均衡器会从十多台运行网站服务的网络服务器选择任意一台，将请求发送到这台服务器进行处理，网络服务器先从缓存服务器查询图片的详情信息，然后从数据库获取图片的其他相关信息。
+我们注意到这张图片的色彩配置信息还没被计算出来，于是服务器将一个新的色彩配置任务推送到任务队列，我们的任务队列服务器将异步地处理图片的色彩配置信息计算，一旦完成，便将配置信息更新到数据库中。
+下一步，服务器将图片标题作为关键词，向全文检索服务发送查询请求以寻找相似图片。此时用户登入他的 Storyblocks 账户，相应地，服务器从账户服务中获取用户账户信息。
+接下来，我们将这个页面浏览事件加载到 data firehose(AWS 推出的流数据装载服务) 以记录到云存储系统，并最终存储到数据仓库，便于分析师分析使用并帮助解答业务问题。
+服务端将视图呈现为为 HTML 页面并经由负载均衡器，返回用户的浏览器客户端。这个页面同时包含存储在云存储系统的 Javascript 和 CSS 代码文件，云服务器直接连接到 CDN 集群，内容也经由 CDN 分发，用户浏览器访问 CDN 集群并获取内容。
+最终，浏览器渲染页面使用户可以浏览阅读。
+接下来，我将带你遍历每个组件，并做简要说明和介绍，帮助你形成一个相对准确的概念模型，以便于理解网络架构和组件间的交互。我仍将遵循已经分享的文章中给出的一些实践建议，这些建议基于我在 Stroyblocks 的业务经验，具有一定参考价值。
+1. DNS 服务 DNS 代表 「域名系统」，这是互联网成为可能的核心技术。DNS 从最基础的层级，提供从域名 (例如 google.com) 到 IP 地址 (85.129.83.120) 的键值对查询服务，事实上，电脑基于网站的 IP 地址路由到合适的服务器。用电话号码比喻，域名和 IP 地址的关系，类似于联系人姓名和号码的关系。正如你需要通过电话簿来查询特定联系人的电话号码，你同样需要 通过 DNS 来查询指定域名的 IP 地址，所以你完全可以把 DNS 理解为互联网的电话号码簿。"><meta itemprop="datePublished" content="2023-12-18T15:30:21+08:00" />
+<meta itemprop="dateModified" content="2023-12-18T15:30:21+08:00" />
+<meta itemprop="wordCount" content="317">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/><meta name="twitter:title" content="网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构"/>
+<meta name="twitter:description" content="网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构 Link: https://engineering.videoblocks.com/web-architecture-101-a3224e126947 Quality: 精翻 Status: Completed Type: 图文
+作为架构师，我希望开发者知道的基础架构概念 以上的架构图是对 Storyblocks 业务架构的一个很好的概括。对于那些相对缺乏经验的 web 开发者，或许你会认为这个架构有些复杂。没关系，在讲解每个组件的具体业务细节之前，我们先举个例子，帮你更容易理解 Storyblocks 的业务架构
+先从一个场景开始：用户用谷歌搜索 「美丽的浓雾和林间的阳光」 。首个结果正好出自 Storyblocks — 一个知名的图片和矢量图资源网站，用户点击该条结果，浏览器重定向到该图片的所在的详情页面。
+这个场景背后，用户浏览器向 DNS 服务器发送请求，查询 Storyblocks 的域名信息，然后发送访问请求。访问请求首先经过负载均衡器，负载均衡器会从十多台运行网站服务的网络服务器选择任意一台，将请求发送到这台服务器进行处理，网络服务器先从缓存服务器查询图片的详情信息，然后从数据库获取图片的其他相关信息。
+我们注意到这张图片的色彩配置信息还没被计算出来，于是服务器将一个新的色彩配置任务推送到任务队列，我们的任务队列服务器将异步地处理图片的色彩配置信息计算，一旦完成，便将配置信息更新到数据库中。
+下一步，服务器将图片标题作为关键词，向全文检索服务发送查询请求以寻找相似图片。此时用户登入他的 Storyblocks 账户，相应地，服务器从账户服务中获取用户账户信息。
+接下来，我们将这个页面浏览事件加载到 data firehose(AWS 推出的流数据装载服务) 以记录到云存储系统，并最终存储到数据仓库，便于分析师分析使用并帮助解答业务问题。
+服务端将视图呈现为为 HTML 页面并经由负载均衡器，返回用户的浏览器客户端。这个页面同时包含存储在云存储系统的 Javascript 和 CSS 代码文件，云服务器直接连接到 CDN 集群，内容也经由 CDN 分发，用户浏览器访问 CDN 集群并获取内容。
+最终，浏览器渲染页面使用户可以浏览阅读。
+接下来，我将带你遍历每个组件，并做简要说明和介绍，帮助你形成一个相对准确的概念模型，以便于理解网络架构和组件间的交互。我仍将遵循已经分享的文章中给出的一些实践建议，这些建议基于我在 Stroyblocks 的业务经验，具有一定参考价值。
+1. DNS 服务 DNS 代表 「域名系统」，这是互联网成为可能的核心技术。DNS 从最基础的层级，提供从域名 (例如 google.com) 到 IP 地址 (85.129.83.120) 的键值对查询服务，事实上，电脑基于网站的 IP 地址路由到合适的服务器。用电话号码比喻，域名和 IP 地址的关系，类似于联系人姓名和号码的关系。正如你需要通过电话簿来查询特定联系人的电话号码，你同样需要 通过 DNS 来查询指定域名的 IP 地址，所以你完全可以把 DNS 理解为互联网的电话号码簿。"/>
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('https://example.org/images/gohugo-default-sample-hero-image.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        遍历分形
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="/about/" title="快速开始 页">
+              快速开始
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="/posts/" title="博客 页">
+              博客
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white no-underline white-90" href="/tutorial/" title="教程 页">
+              教程
+            </a>
+          </li>
+          
+        </ul>
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        博客
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2023-12-18T15:30:21+08:00">十二月 18, 2023</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="网络应用架构入门--硅谷独角兽架构师教你搭建网站架构">网络应用架构入门 — 硅谷独角兽架构师教你搭建网站架构</h1>
+<p>Link: <a href="https://engineering.videoblocks.com/web-architecture-101-a3224e126947">https://engineering.videoblocks.com/web-architecture-101-a3224e126947</a>
+Quality: 精翻
+Status: Completed
+Type: 图文</p>
+<h2 id="作为架构师我希望开发者知道的基础架构概念">作为架构师，我希望开发者知道的基础架构概念</h2>
+<p><img src="/imgs/architecture.png" alt="1*K6M-x-6e39jMq_c-2xqZIQ.png"></p>
+<p>以上的架构图是对 Storyblocks 业务架构的一个很好的概括。对于那些相对缺乏经验的 web 开发者，或许你会认为这个架构有些复杂。没关系，在讲解每个组件的具体业务细节之前，我们先举个例子，帮你更容易理解 Storyblocks 的业务架构</p>
+<p>先从一个场景开始：用户用谷歌搜索 「美丽的浓雾和林间的阳光」 。首个结果正好出自 Storyblocks — 一个知名的图片和矢量图资源网站，用户点击该条结果，浏览器重定向到该图片的所在的详情页面。</p>
+<p>这个场景背后，用户浏览器向 DNS 服务器发送请求，查询 Storyblocks 的域名信息，然后发送访问请求。访问请求首先经过负载均衡器，负载均衡器会从十多台运行网站服务的网络服务器选择任意一台，将请求发送到这台服务器进行处理，网络服务器先从缓存服务器查询图片的详情信息，然后从数据库获取图片的其他相关信息。</p>
+<p>我们注意到这张图片的色彩配置信息还没被计算出来，于是服务器将一个新的色彩配置任务推送到任务队列，我们的任务队列服务器将异步地处理图片的色彩配置信息计算，一旦完成，便将配置信息更新到数据库中。</p>
+<p>下一步，服务器将图片标题作为关键词，向全文检索服务发送查询请求以寻找相似图片。此时用户登入他的 Storyblocks 账户，相应地，服务器从账户服务中获取用户账户信息。</p>
+<p>接下来，我们将这个页面浏览事件加载到 data firehose(AWS 推出的流数据装载服务)  以记录到云存储系统，并最终存储到数据仓库，便于分析师分析使用并帮助解答业务问题。</p>
+<p>服务端将视图呈现为为 HTML 页面并经由负载均衡器，返回用户的浏览器客户端。这个页面同时包含存储在云存储系统的 Javascript 和 CSS 代码文件，云服务器直接连接到 CDN 集群，内容也经由 CDN 分发，用户浏览器访问 CDN 集群并获取内容。</p>
+<p>最终，浏览器渲染页面使用户可以浏览阅读。</p>
+<p>接下来，我将带你遍历每个组件，并做简要说明和介绍，帮助你形成一个相对准确的概念模型，以便于理解网络架构和组件间的交互。我仍将遵循已经分享的文章中给出的一些实践建议，这些建议基于我在 Stroyblocks 的业务经验，具有一定参考价值。</p>
+<h3 id="1-dns-服务">1. DNS 服务</h3>
+<p>DNS 代表 「域名系统」，这是互联网成为可能的核心技术。DNS 从最基础的层级，提供从域名 (例如 google.com) 到 IP 地址 (85.129.83.120) 的键值对查询服务，事实上，电脑基于网站的 IP 地址路由到合适的服务器。用电话号码比喻，域名和 IP 地址的关系，类似于联系人姓名和号码的关系。正如你需要通过电话簿来查询特定联系人的电话号码，你同样需要 通过 DNS 来查询指定域名的 IP 地址，所以你完全可以把 DNS 理解为互联网的电话号码簿。</p>
+<p>我们以后会深入介绍关于 DNS 的详细原理，现在是时候前进到到下一个话题。</p>
+<h3 id="2-负载均衡">2. 负载均衡</h3>
+<p>在深入介绍负载均衡之前，我们需要先行解释应用架构的水平拓展和垂直拓展。</p>
+<p>你肯定会好奇这两个概念的含义和区别：简单来说，水平拓展是指你向资源池增加更多机器设备，而垂直拓展则意味着增加更多算力资源(CPU，内存)到现有机器设备。</p>
+<p>对于 Web 开发，水平拓展常常是最好的选择。</p>
+<p>毕竟，所有事物会中断，服务器有时崩溃，网络会降速，甚至整个数据中心也会偶尔断线。除了保持一切简单，我们别无选择。</p>
+<p>维护多台服务器可以帮你应对突发情况并确保应用持续运行，换言之，你的业务需要具有容错性。</p>
+<p>其次，水平拓展允许你将后端服务(网络服务器，数据库，应用服务)的不同组件分配在不同服务器，借此你可以最高效地调用后端服务的不同组件。</p>
+<p>最后，垂直拓展很容易遇到规模瓶颈，谷歌的搜索平台可以作为典型案例，这个场景也同时适用于 Storyblocks 这样的中小型公司，举例来说，我们在任意时间点都保持运行着 150 到 400 个 AWS EC2 实例，如果通过垂直拓展模式提供同等算力，很难想象我们需要使用何种级别的超级计算机设备。</p>
+<p>现在我们回到负载均衡器，它们是实现业务水平拓展的重要部分，它们将接收的访问请求路由到互为备份的应用服务器集群中的任意一个，并将应用服务器的响应返回到客户端。任何一个应用服务器的处理方式都完全相同，通过这种方式，负载均衡器将访问请求均匀地分派到不同的服务器以防止服务器过载。</p>
+<p>从概念来说，负载均衡器相当简单明了，但是要深入理解，就涉及到很多复杂的概念，这些更复杂的概念，我们将在以后进行讲解。</p>
+<h3 id="3-web-应用服务器">3. Web 应用服务器</h3>
+<p>如果从抽象角度来说，Web 应用服务器并不难描述：它们被用来执行诸如处理用户请求和将 HTML 返回用户浏览器等核心业务逻辑。为了确保任务完成，应用服务器通常会和数据库，缓存层，任务队列，搜索服务，其他微服务组件，数据/日志队列等一系列后端基础设施交互。正如上文所提及，很多时候，因为负载均衡器的存在，应用服务器需要连接更多服务，以便于处理大规模的用户访问请求。</p>
+<p>你应该知道，应用服务的技术实现需要基于特定后端语言，如 Node.js, Ruby, Scala, Java, C#, .NET 等等，同时需要选择基于该后端语言的 Web  MVC 框架，如 Express 之于 Node.js, Ruby on Rails, Play 之于 Scala, Laravel 之于 PHP 等等。本文仅做基本介绍，不会过于深入到这些语言和框架的具体介绍。</p>
+<h3 id="4-数据库服务器">4. 数据库服务器</h3>
+<p>任何一个现代的 Web 应用都使用一个或以上的数据库存储信息。数据库帮助我们完成定义数据结构，插入新数据，查找现有数据，更新和删除原数据，执行数据计算等操作。在大多数情况下，Web 应用服务器直接和专有的数据库服务器通信，任务服务器也是同理。另外，任何一个后端服务都可能拥有一个独立于其他应用的专有服务器。</p>
+<p>尽管我在试图避免在每个组件上过于深入细节，但是如果我不详细解释数据库的一些基础概念，(SQL 和 NoSQL)，必将会影响你理解接下来的其他概念。</p>
+<p>SQL 代表 「结构化查询语言」，发明于上世纪七十年代，用以作为标准的关系数据库数据查询方式，最终被广泛接受和使用。SQL 数据库将数据存储在数据表中，通过 ID 等字段进行表关联。举一个简单的存储用户历史地址信息的的例子简要说明：现在有两个表，用户表和用户地址表，这两张表通过用户编号相关互联，如下图所示。这些表相关关联，是因为用户地址表的用户编号字段信息是用户表中用户编号在用户地址表的外键。</p>
+<p><img src="/static/imgs/database.png" alt="Untitled.png"></p>
+<p>如果你对 SQL 不太了解，我强烈建议你学习这个基础教程，可汗学院的 <a href="https://www.khanacademy.org/computing/computer-programming/sql">SQL 入门课：数据查询与数据管理</a> ，SQL 在 Web 开发领域应用相当广泛，你至少需要了解基础知识，这样才能恰当地设计应用架构。</p>
+<p>NoSQL 代表 Non-SQL 或 Not-Only-SQL，是指新一代的数据库技术，用于处理大型网络应用所产生的巨量数据（大多数关系型数据库无法很好地水平拓展，只能垂直拓展，直到性能瓶颈）。如果你对 NoSQL 一无所知，我建议你从以下介绍入手：</p>
+<ul>
+<li><a href="https://www.w3resource.com/mongodb/nosql.php">https://www.w3resource.com/mongodb/nosql.php</a></li>
+<li><a href="http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html">http://www.kdnuggets.com/2016/07/seven-steps-understanding-nosql-databases.html</a></li>
+<li><a href="https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql">https://resources.mongodb.com/getting-started-with-mongodb/back-to-basics-1-introduction-to-nosql</a></li>
+</ul>
+<p>我还会记住，总的来说，业界正在把 SQL 作为数据库的通行接口标准，即使对于NoSQL 也是如此。所以如果你对 SQL 缺乏了解，很有必要认真学习一番，在开发行业，SQL 是无可或缺的。</p>
+<h3 id="5-缓存服务">5. 缓存服务</h3>
+<p>缓存服务为相关信息提供简单的键值数据存储，可在接近 O（1） 时间内保存和查找信息。应用服务同样会利用缓存服务预先存储一些计算量较大的计算结果，以便于下次需要时直接从缓存中获取结果而重新计算。应用服务也可能从其他服务获取缓存，如数据库查询结果，外部服务调用结果，指定URL 的 HTML 文件，以及其他服务。下面是真实世界的一些案例：</p>
+<ul>
+<li>谷歌直接缓存常见的搜索关键词如「狗」或者「泰勒·斯威夫特」的搜索结果，而非每次搜索时重新计算。</li>
+<li>Facebook 缓存你登入账户时所看到的信息，如你的发帖记录信息和朋友列表信息等数据。<a href="https://medium.com/@shagun/scaling-memcache-at-facebook-1ba77d71c082">这篇文章</a>详细介绍了 Facebook 的缓存技术应用。</li>
+<li>Storyblocks 缓存服务端的 React 渲染生成的HTML 文件，搜索结果和提前输入结果等信息</li>
+</ul>
+<p>使用最广泛的两种缓存服务器技术是 Redis 和 Memcache，我将在另外的文章中详细讲解。</p>
+<h3 id="6-任务队列和服务器">6. 任务队列和服务器</h3>
+<p>在很多不涉及与用户请求交互的场景中，网络应用需要异步地完成很多工作。例如，为了搜索查询结果，谷歌需要用爬虫遍历全网的内容并编制索引，谷歌没有在你搜索时才进行上述操作，相反它完全异步地爬取网络内容，并更新查询索引。</p>
+<p>尽管有很多应用架构可用于完成异步任务，但最通用的是「任务队列架构」。它包括两个组件：一系列等待被执行的「任务」和数个用于执行任务的任务服务器（通常被称为 Wokers ）</p>
+<p>任务队列存储一系列需要被异步执行的任务。先进先出（FIFO）队列是最简单的任务队列，尽管多数应用最终需要可以按照优先级排序的队列系统。不管是由日常任务调度安排或是由用户操作触发，一旦应用服务需要执行任务，它都会将合适的任务添加到队列中。</p>
+<p>例如，Storyblocks，将任务队列用于强化那些用于支持市场的幕后工作：例如视频和图片的编码，包含元数据标签的 CSV 的处理，用户统计数据的聚合，密码重置邮件的发送等任务。起初我们使用简单的 FIFO 队列，但最终我们还是升级为优先级列队以确保那些时间敏感的任务可以迅速完成（如密码重置邮件的发送）</p>
+<p>任务服务器的任务处理流程为：任务服务器轮询任务队列以确定是否有任务需要执行，如有则推出（pop）该任务并加以执行。相关的编程语言和服务框架数不胜数，这里就不作过多展开。</p>
+<h3 id="7-全文检索服务">7. 全文检索服务</h3>
+<p>当用户输入文字进行查询时，多数网络应用都或多或少地提供检索功能，应用服务返回最相关的查询结果。这种用于支持文本查询的功能，通常被称为「全文检索」，全文检索使用反向索引以便快速查询包含关键词的文件信息。</p>
+<p><img src="/static/imgs/InveredIndex.png" alt="Untitled%201.png"></p>
+<p>上图说明如何将这三个文档标题转换为反向索引，以便于从特定关键字快速查找到标题中具有该关键字的文档。请注意，如 &ldquo;in&rdquo;，&ldquo;with&rdquo; 等常见单词，通常不包括在倒置索引中的常见单词（被称为停止词-stop words）</p>
+<p>尽管有些数据库直接提供全文检索特性（例如，<a href="https://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html">MySQL 支持全文搜索</a>）但将一般将计算生成并存储反向索引的「检索服务」作为独立服务并提供查询接口。现在最流行的全文检索平台是 <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a>，同时 <a href="http://sphinxsearch.com/">Sphinx</a> 和 <a href="http://lucene.apache.org/solr/features.html">Apache Solr</a> 也是常见的备用选择。</p>
+<h3 id="8-服务">8. 服务</h3>
+<p>只要应用达到一定规模，其中一定有些服务需要被拆分出来成为单独的应用。这些应用不一定会直接暴露给外部系统，但是一定会和原来的应用以及其他服务交互。举例来说，Storyblocks 有几种操作和计划服务：</p>
+<ul>
+<li>**账户服务：**存储用户在我们所有站点的相关数据，这将有助于我们提供交叉销售的机会并创造一个一致化的用户体验</li>
+<li>**内容服务：**存储所有视频、音频和图形内容的元数据，同时为内容下载和查看下载历史记录提供接口</li>
+<li>**支付服务：**为处理客户信用卡结算信息提供接口</li>
+<li><strong>HTML → PDF 服务：</strong> 提供简单接口，以支持根据 HTML 页面返回相应 PDF 文件</li>
+</ul>
+<h3 id="9-数据">9. 数据</h3>
+<p>如今，公司的生死存亡系于是否充分利用数据。现在的网络应用，只要达到一定业务规模，就一定会建立数据管道以确保数据的收集、存储和分析。典型的管道包括以下三个主要阶段：</p>
+<ul>
+<li>应用发送数据，特定是关于用户行为的事件信息，到 data firehose，后者提供了流处理接口以摄取和处理数据。通常来说，源数据会经过转换或处理并发送到另外的 firehose。AWS Kinesis 和 Kafka 是用于此目的的两种最常见的技术</li>
+<li>源数据和经过转换或处理的新数据将被存储到云存储系统。AWS Kinesis 提供了一种名为 &ldquo;firehose&rdquo; 的设置，它帮助我们轻松地配置将源数据存储到云存储（S3）的整个过程</li>
+<li>经过转换或处理的新数据常常被装载到数据仓库以便于分析。我们也使用 AWS Redshift，它在创业公司中相当普遍且份额正逐渐扩大。尽管大公司通常使用 Oracle 或其他专有的数据仓库技术。如果数据集足够庞大，对于分析而言，类 Hadoop 的 NoSQL MapReduce 技术将是必要的。</li>
+</ul>
+<p>应用架构图中为提及的一个环节是：将数据从网络应用和服务的生产数据库装载到数据仓库。比如在 Storyblocks 我们每天装载视频块，音频块，故事块（VideoBlocks, AudioBlocks, Storyblocks）和账户服务以及参与者门户数据库到 Redshift。由此通过整合核心业务数据和用户行为事件数据，我们的为分析师提供一个完整的数据集。</p>
+<h3 id="10-云存储">10. 云存储</h3>
+<p>按照 <a href="https://aws.amazon.com/cn/what-is-cloud-storage/">AWS 的话</a>说，「云存储是一种存储、访问和分享数据的方便且可拓展的方式」和本地文件系统的现有方式一样，你可以使用云存储来存储和访问任何文件，其好处是能够调用 RESTful API 通过 HTTP 进行交互。到目前为止，亚马逊 S3 是市场上最受欢迎的云存储服务， 也被 Storyblocks 用于存储视频、图片和音频资源，还有 CSS 和 Javascript 代码，以及用户事件数据等信息。</p>
+<h3 id="11-cdn">11. CDN</h3>
+<p>CDN（Content Delivery Network）代表「内容分发服务」，该技术提供一种快速加载 HTML、CSS、JavaScript 文件和图片等网页资源的方式，比从原服务器直接请求要快得多。CDN 基于遍布世界各地的「边缘服务器」分发内容，这样用户可以从边缘服务器加载网页资源，而非直接访问原服务器加载。如下图所示：身在西班牙的用户请求原站点位于美国纽约的网页，但是静态网络资源却经由CDN 网络中位于英国的边缘服务器获取，而非通过缓慢且不安全的跨洋 HTTP 请求。</p>
+<p><img src="/static/imgs/CDN.png" alt="Untitled%202.png"></p>
+<p>想要了解更详尽的介绍，可以<a href="https://www.creative-artworks.eu/why-use-a-content-delivery-network-cdn/">查看本文</a>。通常来说，Web 应用应始终使用 CDN 为 CSS、Javascript、图像、视频和任何其他网络资源提供服务。某些应用还会使用 CDN 来分发静态 HTML 页面。</p>
+<h3 id="写在最后">写在最后</h3>
+<p>这是网络架构入门的总结，我希望你能有所收获，也希望能够在接下来的一到两年间，提供一些更加深入讲解其中组件的进阶型文章。</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="https://example.org/" >
+    &copy;  遍历分形 2023 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

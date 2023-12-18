@@ -1,0 +1,9 @@
+baseURL = 'https://example.org/'
+languageCode = 'zh-cn'
+title = '遍历分形'
+theme = 'ananke'
+DefaultContentLanguage = "zh"
+SectionPagesMenu = "main"
+Paginate = 4 # this is set low for demonstrating with dummy content. Set to a higher number
+googleAnalytics = ""
+enableRobotsTXT = true
