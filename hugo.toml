@@ -1,4 +1,4 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://hectorblog.netlify.app/'
 languageCode = 'zh-cn'
 title = '遍历分形'
 theme = 'ananke'

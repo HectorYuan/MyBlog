@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>hugo on 遍历分形</title>
-    <link>https://example.org/tags/hugo/</link>
+    <link>https://hectorblog.netlify.app/tags/hugo/</link>
     <description>Recent content in hugo on 遍历分形</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 18 Dec 2023 16:47:15 +0800</lastBuildDate>
-    <atom:link href="https://example.org/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://hectorblog.netlify.app/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>使用场景</title>
-      <link>https://example.org/tutorial/usecase/</link>
+      <link>https://hectorblog.netlify.app/tutorial/usecase/</link>
       <pubDate>Mon, 18 Dec 2023 16:47:15 +0800</pubDate>
-      <guid>https://example.org/tutorial/usecase/</guid>
+      <guid>https://hectorblog.netlify.app/tutorial/usecase/</guid>
       <description>下面是以表格形式整理的Hugo中的30个重要概念、使用场景和具体案例： 概念 使用场景 具体案例 安装 Hugo 在本地计算机上安装Hugo，以便开始建站。 访</description>
     </item>
   </channel>
