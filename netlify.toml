@@ -4,6 +4,11 @@
   functions = "netlify/functions"
   publish = "public"
 
+[build.environment]
+HUGO_VERSION = "0.121.1"
+GO_VERSION = "1.21.5"
+
+
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
   ## Not needed for static site generators.
   #[[redirects]]
